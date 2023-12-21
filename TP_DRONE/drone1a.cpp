@@ -25,7 +25,7 @@ int main(int argc, char* argv[]){
         std::cerr << "Impossible de trouver l'adresse IP du serveur" << std::endl;
         return 1;
     }
-    socketClient = socket(AF_INET, SOCK_STREAM, 0);
+    socketClient = socket(AF_INET, SOCK_DGRAM, 0);
     if (socketClient < 0){
         std::cerr << "Erreur lors de la création du socket" << std::endl;
         return 1;
@@ -35,27 +35,29 @@ int main(int argc, char* argv[]){
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     memcpy(&addr.sin_addr, serverHost->h_addr, serverHost->h_length);
-    if (connect(socketClient, (struct sockaddr*)&addr, sizeof(addr)) < 0){
-        std::cerr << "Erreur lors de la connexion au serveur" << std::endl;
-        return 1;
-    }
-    else{
-        while (true){
-            std::cout << "Entrez une requête : ";
-            std::cin >> requete;
-            std::cout <<"\n";
-            if (send(socketClient, requete, strlen(requete), 0) < 0){
-                std::cerr << "Erreur lors de l'envoi du numéro de cours" << std::endl;
-                return 1;
-            }
-            char message[taille];
-            memset(message, 0, taille);
-            if (recv(socketClient, message, taille-1, 0) < 0){
-                std::cerr << "Erreur lors de la réception du message" << std::endl;
-                return 1;
-            }
-        std::cout << "Message reçu : " << message << std::endl;
+    while (true){
+        std::cout << "Entrez une requête : ";
+        std::cin >> requete;
+        std::cout << "\n";
+        if (sendto(socketClient, requete, strlen(requete), 0, (struct sockaddr*)&addr, sizeof(addr)) < 0){
+            std::cerr << "Erreur lors de l'envoi du numéro de cours" << std::endl;
+            return 1;
         }
+        char message[taille];
+        memset(message, 0, taille);
+        socklen_t serverAddrLen = sizeof(addr);
+        if (recvfrom(socketClient, message, taille-1, 0, (struct sockaddr*)&addr, &serverAddrLen) < 0){
+            std::cerr << "Erreur lors de la réception du message" << std::endl;
+            return 1;
+        }
+        else if (strcmp(message, "OK") == 0){
+            continue;
+        }
+        else if (strcmp(message, "ERROR") == 0){
+            std::cout << "Le serveur n'a pas reussi à traiter votre requête" << std::endl;
+            continue;
+        }
+        std::cout << "Message reçu : " << message << std::endl;
     }
     return 0;
 }
