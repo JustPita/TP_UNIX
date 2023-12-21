@@ -12,19 +12,14 @@ SNIR2
 
 int main(int argc, char* argv[]){
     if (argc != 2){
-        std::cout << "Usage: drone1a <NomDuServeur>" << std::endl;
+        std::cout << "Usage: drone1a <AdresseIPServeur>" << std::endl;
         return 1;
     }
-    const char* serverHostname = argv[1];
+    const char* serverIP = argv[1];
     const int port = 8889;
     const int taille = 256;
     char requete[taille];
     int socketClient;
-    struct hostent* serverHost = gethostbyname(serverHostname);
-    if (serverHost == NULL){
-        std::cerr << "Impossible de trouver l'adresse IP du serveur" << std::endl;
-        return 1;
-    }
     socketClient = socket(AF_INET, SOCK_DGRAM, 0);
     if (socketClient < 0){
         std::cerr << "Erreur lors de la création du socket" << std::endl;
@@ -34,13 +29,16 @@ int main(int argc, char* argv[]){
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
-    memcpy(&addr.sin_addr, serverHost->h_addr, serverHost->h_length);
+    if (inet_pton(AF_INET, serverIP, &(addr.sin_addr)) <= 0){
+        std::cerr << "Adresse IP du serveur invalide" << std::endl;
+        return 1;
+    }
     while (true){
         std::cout << "Entrez une requête : ";
         std::cin >> requete;
         std::cout << "\n";
         if (sendto(socketClient, requete, strlen(requete), 0, (struct sockaddr*)&addr, sizeof(addr)) < 0){
-            std::cerr << "Erreur lors de l'envoi du numéro de cours" << std::endl;
+            std::cerr << "Erreur lors de l'envoi de la requête" << std::endl;
             return 1;
         }
         char message[taille];
@@ -51,10 +49,6 @@ int main(int argc, char* argv[]){
             return 1;
         }
         else if (strcmp(message, "OK") == 0){
-            continue;
-        }
-        else if (strcmp(message, "ERROR") == 0){
-            std::cout << "Le serveur n'a pas reussi à traiter votre requête" << std::endl;
             continue;
         }
         std::cout << "Message reçu : " << message << std::endl;
