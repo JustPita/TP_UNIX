@@ -1,7 +1,7 @@
 /*~~~~~~~~~~~~~~~~~~~~
 Peter SARRITZU
 SNIR2
-20/12/2023
+21/12/2023
 ~~~~~~~~~~~~~~~~~~~~*/
 #include <iostream>
 #include <sys/socket.h>
@@ -11,14 +11,29 @@ SNIR2
 #include <string.h>
 
 int main(int argc, char* argv[]){
-    if (argc != 3){
-        std::cout << "Usage: client_datas <NomDuServeur> <NumCours>" << std::endl;
+    if (argc ==1){
+        std::cerr << "Usage : ./client_gest <serveur> <cmde> <num> [intitule]" << std::endl;
         return 1;
     }
     const char* serverHostname = argv[1];
-    const int port = 25000;
+    const int port = 26000;
     const int taille = 256;
-    const char* numCours = argv[2];
+    char trame[taille];
+    const char* cmde = argv[2];
+    const char* num = argv[3];
+    const char* intitule = argv[4];
+    if (argc == 4){
+        strcpy(trame, cmde);
+        strcat(trame, "|");
+        strcat(trame, num);
+    }
+    else if(argc == 5){
+        strcpy(trame, cmde);
+        strcat(trame, "|");
+        strcat(trame, num);
+        strcat(trame, "|");
+        strcat(trame, intitule);
+    }
     int socketClient;
     struct hostent* serverHost = gethostbyname(serverHostname);
     if (serverHost == NULL){
@@ -40,8 +55,8 @@ int main(int argc, char* argv[]){
         return 1;
     }
     else{
-        if (send(socketClient, numCours, strlen(numCours), 0) < 0){
-        std::cerr << "Erreur lors de l'envoi du numéro de cours" << std::endl;
+        if (send(socketClient, trame, sizeof(trame), 0) < 0){
+        std::cerr << "Erreur lors de l'envoi de la trame" << std::endl;
         return 1;
         }
         char message[taille];

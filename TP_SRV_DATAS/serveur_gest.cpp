@@ -1,7 +1,7 @@
 /*~~~~~~~~~~~~~~~~~~~~
 Peter SARRITZU
 SNIR2
-20/12/2023
+21/12/2023
 ~~~~~~~~~~~~~~~~~~~~*/
 #include <iostream>
 #include <sys/socket.h>
@@ -12,10 +12,9 @@ SNIR2
 #include <cppconn/statement.h>
 #include <cppconn/resultset.h>
 #include <iomanip>
-#include <unistd.h> // Ajout de cette ligne pour utiliser fork()
 
-int main() {
-    const int port = 25000;
+int main(){
+    const int port = 26000;
     const int taille = 10;
     char message[taille];
     system("clear");
@@ -68,23 +67,10 @@ int main() {
         else{
             intitule = "Cours non trouvé.";
         }
-        pid_t pid = fork();
-        switch (pid) {
-            case -1:
-                std::cerr << "Erreur lors de la création du processus fils" << std::endl;
-                return 1;
-            case 0:
-                if (send(socketClient, intitule.c_str(), intitule.length(),0) < 0) {
-                    std::cerr << "Erreur lors de l'envoi de l'intitulé du cours" << std::endl;
-                    return 1;
-                }
-                close(socketClient);
-                return 0;
-            default:
-                close(socketClient);
-                break;
+        if (send(socketClient, intitule.c_str(), intitule.length(), 0) < 0){
+            std::cerr << "Erreur lors de l'envoi de l'intitulé du cours" << std::endl;
+            return 1;
         }
     }
-    close(socketServeur);
     return 0;
 }
