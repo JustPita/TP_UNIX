@@ -1,0 +1,39 @@
+# depslib dependency file v1.0
+1696405552 source:/home/snir/psarritzu/TP_C_2/degre6/c2f.cpp
+	<iostream>
+	<iomanip>
+	<stdlib.h>
+	"degre.h"
+
+1696408367 /home/snir/psarritzu/TP_C_2/degre6/degre.h
+
+1696515891 source:/home/snir/psarritzu/TP_C_2/degre6/degre6.cpp
+	<iostream>
+	<iomanip>
+	<stdlib.h>
+	"degre.h"
+
+1696413701 source:/home/snir/psarritzu/TP_C_2/degre6/degreoui.cpp
+	<iostream>
+	<iomanip>
+	<stdlib.h>
+	"degre.h"
+
+1696405552 source:/home/snir/psarritzu/TP_C_2/degre6/f2c.cpp
+	<iostream>
+	<iomanip>
+	<stdlib.h>
+	"degre.h"
+
+1696405552 source:/home/snir/psarritzu/TP_C_2/degre6/table.cpp
+	<iostream>
+	<iomanip>
+	<stdlib.h>
+	"degre.h"
+
+1696515615 source:/home/snir/psarritzu/TP_C_2/degre6/menu2.cpp
+	<iostream>
+	<iomanip>
+	<stdlib.h>
+	"degre.h"
+

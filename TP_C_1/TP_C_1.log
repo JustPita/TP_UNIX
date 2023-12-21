@@ -1,0 +1,7 @@
+2.1)c++ -o degre degre.cpp
+2.2)c++ -o degre2 degre2.cpp
+2.3)c++ -o degre3 degre3.cpp
+2.4)c++ -oE degre4 degre4.cpp fctdegre.cpp degre.h
+2.4)c++ -oE degre4 degre4.cpp menu.cpp f2c.cpp c2f.cpp table.cpp
+2.5)c++ -Dlinux degre5.cpp menu2.cpp f2c.cpp c2f.cpp table.cpp
+2.5)c++ -D_WIN32 degre5.cpp menu2.cpp f2c.cpp c2f.cpp table.cpp

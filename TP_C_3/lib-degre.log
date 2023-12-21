@@ -1,0 +1,9 @@
+c++ -c c2k.cpp
+c++ -c menu2.cpp
+c++ -c table.cpp
+c++ -c k2c.cpp
+c++ -o degre.o degre7.cpp c2k.o k2c.o menu2.o table.o
+ar rv libdegre.a k2c.o c2k.o menu2.o table.o
+c++ -static -o degre_statique degre_statique.cpp -L/home/snir/psarritzu/lib -l:libdegre1.a //problème lors des test impossible de supprimer libdegre.a donc fichier fonctionnel libdegre1.a
+c++ -shared -fPIC -Wl,-soname,libdegre.so -o libdegre.so degre7.cpp k2c.cpp c2k.cpp table.cpp menu2.cpp
+c++ -o degre_dynamique degre_dynamique.cpp -L/usr/local/lib -ldegre
